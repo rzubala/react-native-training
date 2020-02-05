@@ -1,21 +1,26 @@
 import React from 'react'
-import { View, StyleSheet, Button, Image } from 'react-native'
+import { View, Text, StyleSheet, Button, Image } from 'react-native'
 import BodyText from '../components/BodyText'
 import TitleText from '../components/TitleText'
+import Colors from '../constants/colors'
+import MainButton from '../components/MainButton'
 
 const GameOverScreen = props => {
     return (<View style={styles.screen}>
         <TitleText>The Game is Over!</TitleText>
         <View style={styles.imageContainer}>
-            <Image style={styles.image} 
-            fadeDuration={1000}
-            //source={require('../assets/success.png')} 
-            source={{uri: 'https://klasresearch.com/resources/images/default-source/default-album/population-health-summit.jpg'}} 
-            resizeMode='cover' />
+            <Image style={styles.image}
+                fadeDuration={1000}
+                source={require('../assets/success.png')}
+                //source={{uri: 'https://klasresearch.com/resources/images/default-source/default-album/population-health-summit.jpg'}} 
+                resizeMode='cover' />
         </View>
-        <BodyText>Number of rounds: {props.roundsNumber}</BodyText>
-        <BodyText>Number was: {props.userNumber}</BodyText>
-        <Button title="New game" onPress={props.onRestart} />
+        <View style={styles.resultsContainer}>
+            <BodyText style={styles.resultText}>
+                Your phone needed <Text style={styles.highlight}>{props.roundsNumber}</Text> rounds to guess the number <Text style={styles.highlight}>{props.userNumber}</Text>
+            </BodyText>
+        </View>
+        <MainButton onPress={props.onRestart}>NEW GAME</MainButton>
     </View>)
 }
 
@@ -23,11 +28,11 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center' 
+        alignItems: 'center'
     },
     image: {
         width: '100%',
-        height: '100%'        
+        height: '100%'
     },
     imageContainer: {
         width: 300,
@@ -37,6 +42,18 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         overflow: 'hidden',
         marginVertical: 30
+    },
+    highlight: {
+        color: Colors.primary,
+        fontFamily: 'open-sans-bold'
+    },
+    resultsContainer: {
+        marginHorizontal: 30,
+        marginVertical: 15
+    },
+    resultText: {
+        textAlign: 'center',
+        fontSize: 20
     }
 })
 
