@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { View, Text, StyleSheet, Alert } from 'react-native'
+import { View, Text, StyleSheet, Alert, ScrollView, FlatList } from 'react-native'
 import NumberContainer from '../components/NumberContainer'
 import Card from '../components/Card'
 import MainButton from '../components/MainButton'
 import { Ionicons } from '@expo/vector-icons'
+import BodyText from '../components/BodyText'
 
 import DefaultStyles from '../constants/default-styles'
 
@@ -19,16 +20,17 @@ const generateRandomBetween = (min, max, exclude) => {
 }
 
 const GameScreen = props => {
-    const [currentGuess, setCurrentGuess] = useState(generateRandomBetween(1, 100, props.userChoice))
-    const [rounds, setRounds] = useState(0)
+    const initialGuess = generateRandomBetween(1, 100, props.userChoice).toString()
+    const [currentGuess, setCurrentGuess] = useState(initialGuess)
+    const [pastGuesses, setPastGuesses] = useState([initialGuess])
     const currentLow = useRef(1)
     const currentHigh = useRef(100)
 
-    const { userChoice, onGameOver} = props
+    const { userChoice, onGameOver } = props
 
     useEffect(() => {
         if (currentGuess === userChoice) {
-            onGameOver(rounds)
+            onGameOver(pastGuesses.length)
         }
     }, [currentGuess, userChoice, onGameOver])
 
@@ -42,11 +44,21 @@ const GameScreen = props => {
         if (direction === 'lower') {
             currentHigh.current = currentGuess
         } else {
-            currentLow.current = currentGuess
+            currentLow.current = (parseInt(currentGuess) + 1).toString()
         }
         const nextNumber = generateRandomBetween(currentLow.current, currentHigh.current, currentGuess)
         setCurrentGuess(nextNumber)
-        setRounds(curRounds => curRounds + 1)
+        //setRounds(curRounds => curRounds + 1)
+        setPastGuesses(currentPastGuesses => [nextNumber.toString(), ...currentPastGuesses])
+    }
+
+    const renderListItem = (listLength, itemData) => {
+        return (
+            <View style={styles.listItem}>
+                <BodyText>#{listLength - itemData.index}</BodyText>
+                <BodyText>{itemData.item}</BodyText>
+            </View>
+        )
     }
 
     return (
@@ -54,9 +66,15 @@ const GameScreen = props => {
             <Text style={DefaultStyles.title}>Opponent's Guess</Text>
             <NumberContainer>{currentGuess}</NumberContainer>
             <Card style={styles.buttonContainer}>
-                <MainButton onPress={nextGuessHandler.bind(this, 'lower')} ><Ionicons name="md-remove" size={24} color="white"/></MainButton>
-                <MainButton onPress={nextGuessHandler.bind(this, 'greater')} ><Ionicons name="md-add" size={24} color="white"/></MainButton>
+                <MainButton onPress={nextGuessHandler.bind(this, 'lower')} ><Ionicons name="md-remove" size={24} color="white" /></MainButton>
+                <MainButton onPress={nextGuessHandler.bind(this, 'greater')} ><Ionicons name="md-add" size={24} color="white" /></MainButton>
             </Card>
+            <View style={styles.listContainer}>
+                {/* <ScrollView contentContainerStyle={styles.list}>
+                    {pastGuesses.map((guess, index) => renderListItem(guess, pastGuesses.length - index))}
+                </ScrollView> */}
+                <FlatList contentContainerStyle={styles.list} keyExtractor={item => item} data={pastGuesses} renderItem={renderListItem.bind(this, pastGuesses.length)}/>
+            </View>
         </View>
     )
 }
@@ -73,6 +91,25 @@ const styles = StyleSheet.create({
         marginTop: 20,
         width: 400,
         maxWidth: '90%'
+    },
+    listItem: {
+        flexDirection: 'row',
+        borderColor: 'black',
+        borderWidth: 1,
+        padding: 15,
+        marginVertical: 10,
+        backgroundColor: 'white',
+        justifyContent: 'space-between',
+        width: '100%'
+    },
+    listContainer: {
+        flex: 1,
+        width: '60%'
+    },
+    list: {
+        flexGrow: 1,
+        // alignItems: 'center',
+        justifyContent: 'flex-end'
     }
 })
 export default GameScreen
