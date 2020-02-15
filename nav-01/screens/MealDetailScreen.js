@@ -41,7 +41,6 @@ MealDetailScreen.navigationOptions = navigationData => {
                 <Item title='Favourite' iconName='ios-star' onPress={() => { }} />
             </HeaderButtons>
         )
-
     }
 }
 
