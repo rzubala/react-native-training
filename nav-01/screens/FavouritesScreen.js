@@ -12,7 +12,7 @@ const FavouritesScreen = props => {
 
 FavouritesScreen.navigationOptions = (navData) => {
     return {
-        headerTitle: 'Your favourites',
+        headerTitle: 'Your favourites!',
         headerLeft: () => (
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
                 <Item title="Menu" iconName="ios-menu" onPress={() => {
