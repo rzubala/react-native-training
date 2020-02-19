@@ -25,8 +25,4 @@ const ProductsNavigator = createStackNavigator({
     }
 })
 
-ProductsOverviewScreen.navigationOptions = {
-    headerTitle: 'All products'
-}
-
 export default createAppContainer(ProductsNavigator)
