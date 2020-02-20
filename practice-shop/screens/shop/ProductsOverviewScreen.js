@@ -46,6 +46,13 @@ ProductsOverviewScreen.navigationOptions = navigationData => {
                     })
                  }} />
             </HeaderButtons>
+        ),
+        headerLeft: () => (
+            <HeaderButtons HeaderButtonComponent={HeaderButton}>
+                <Item title='Menu' iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'} onPress={() => {
+                    navigationData.navigation.toggleDrawer()
+                 }} />
+            </HeaderButtons>
         )
     }
 }
