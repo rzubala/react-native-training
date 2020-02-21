@@ -4,16 +4,17 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import { useSelector } from 'react-redux'
 
 import HeaderButton from '../../components/UI/HeaderButton'
+import OrderItem from '../../components/shop/OrderItem'
 
 const OrdersScreen = props => {
     const orders = useSelector(state => state.orders.orders)
-    console.log(orders)
+
     return (
         <View style={styles.screen}>
             <FlatList data={orders} keyExtractor={order => order.id} renderItem={itemData => {
-                return (
-                    <Text>{itemData.item.totalAmount}</Text>
-                )
+                return <OrderItem
+                    amount={itemData.item.totalAmount}
+                    date={itemData.item.readableDate} />
             }} />
         </View>
     )
