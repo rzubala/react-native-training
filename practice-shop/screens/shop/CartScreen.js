@@ -36,6 +36,7 @@ const CartScreen = props => {
                 data={cartItems} keyExtractor={item => item.productId}
                 renderItem={itemData =>
                     <CartItem
+                        deletable
                         quantity={itemData.item.quantity}
                         title={itemData.item.productTitle}
                         amount={itemData.item.sum}
