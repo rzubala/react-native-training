@@ -3,6 +3,7 @@ import { View, Text, Button, StyleSheet, Platform, TouchableOpacity } from 'reac
 import { Ionicons } from '@expo/vector-icons'
 import Colors from '../../constants/Colors'
 
+
 const CartItem = props => {
     return (
         <View style={styles.cartItem}>

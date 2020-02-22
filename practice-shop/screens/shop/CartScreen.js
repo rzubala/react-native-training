@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, StyleSheet, FlatList, Platform, Button } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 
+import Card from '../../components/UI/Card'
 import CartItem from '../../components/shop/CartItem'
 import Colors from '../../constants/Colors'
 import * as CartActions from '../../store/actions/cart'
@@ -26,12 +27,12 @@ const CartScreen = props => {
 
     return (
         <View style={styles.screen}>
-            <View style={styles.summary}>
+            <Card style={styles.summary}>
                 <Text style={styles.summaryText}>Total: <Text style={styles.amount}>${Math.round(cartTotalAmount.toFixed(2) * 100)/100}</Text></Text>
                 <Button color={Colors.accent} title='Order now' onPress={() => {
                     dispatch(OrderActions.addOrder(cartItems, cartTotalAmount))
                  }} disabled={cartItems.length === 0} />
-            </View>
+            </Card>
             <FlatList
                 data={cartItems} keyExtractor={item => item.productId}
                 renderItem={itemData =>
@@ -56,16 +57,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         marginBottom: 20,
-        padding: 10,
-        shadowColor: 'black',
-        shadowOffset: 0.26,
-        shadowOffset: {
-            width: 0, height: 2
-        },
-        shadowRadius: 8,
-        elevation: 5,
-        borderRadius: 10,
-        backgroundColor: 'white'
+        padding: 10
     },
     summaryText: {
         fontFamily: 'open-sans-bold',

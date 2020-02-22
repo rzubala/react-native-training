@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, Button, View, Text, StyleSheet, Platform } from 'react-native'
+import { FlatList, Button, View, Text, StyleSheet, Platform, Alert } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 
@@ -21,14 +21,25 @@ const UserProductsScreen = props => {
         })
     }
 
+    const deleteHandler = (id) => {
+        Alert.alert('Are you sure?', 'Do you want to delete?', [
+            { text: 'No', style: 'default' },
+            {
+                text: 'Yes', style: 'destructive', onPress: () => {
+                    dispatch(ProductActions.deleteProduct(id))
+                }
+            }
+        ])
+    }
+
     return <FlatList data={userProducts} keyExtractor={prod => prod.id} renderItem={itemData =>
         <ProductItem
             image={itemData.item.imageUrl}
             title={itemData.item.title}
             price={itemData.item.price}
             onSelect={() => { editProductHandler(itemData.item.id) }} >
-            <Button color={Colors.primary} title="Edit" onPress={() =>  { editProductHandler(itemData.item.id) }} />
-            <Button color={Colors.primary} title="Delete" onPress={() => { dispatch(ProductActions.deleteProduct(itemData.item.id))}} />
+            <Button color={Colors.primary} title="Edit" onPress={() => { editProductHandler(itemData.item.id) }} />
+            <Button color={Colors.primary} title="Delete" onPress={() => deleteHandler(itemData.item.id)} />
         </ProductItem>
     } />
 }
@@ -49,7 +60,7 @@ UserProductsScreen.navigationOptions = navigationData => {
         headerRight: () => (
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
                 <Item title='Add' iconName={Platform.OS === 'android' ? 'md-create' : 'ios-create'} onPress={() => {
-                    navigationData.navigation.navigate({routeName: 'EditProduct'})
+                    navigationData.navigation.navigate({ routeName: 'EditProduct' })
                 }} />
             </HeaderButtons>
         )
