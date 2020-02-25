@@ -12,22 +12,29 @@ import * as ProductsActions from '../../store/actions/products'
 const ProductsOverviewScreen = props => {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState()
+    const [isRefreshing, setIsRefreshing] = useState(false)
     const products = useSelector(state => state.products.availableProducts)
     const dispatch = useDispatch()
 
     const loadProducts = useCallback(async () => {
-        setIsLoading(true)
+        setIsRefreshing(true)
         setError(null)
         try {
             await dispatch(ProductsActions.fetchProducts())
         } catch (err) {
             setError(err.message)
         }
-        setIsLoading(false)
-    }, [dispatch, setIsLoading, setError])
+        setIsRefreshing(false)
+    }, [dispatch, setIsRefreshing, setError])
 
     useEffect(() => {
-        loadProducts()
+        setIsLoading(true)
+        loadProducts().then(() => {
+            setIsLoading(false)
+        }).catch(err => {
+            setIsLoading(false)
+            setError(err)
+        })
     }, [dispatch, loadProducts])
 
     useEffect(() => {
@@ -65,7 +72,10 @@ const ProductsOverviewScreen = props => {
         </View>)
     }
 
-    return <FlatList data={products} keyExtractor={item => item.id} renderItem={itemData =>
+    return <FlatList 
+            onRefresh={loadProducts}
+            refreshing={isRefreshing}
+            data={products} keyExtractor={item => item.id} renderItem={itemData =>
         <ProductItem
             image={itemData.item.imageUrl}
             title={itemData.item.title}
