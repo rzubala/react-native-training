@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useReducer } from "react";
 import {
   ScrollView,
   View,
@@ -11,11 +11,80 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { useSelector, useDispatch } from "react-redux";
 
+import * as AuthActions from "../../store/actions/auth";
 import Input from "../../components/UI/Input";
 import Card from "../../components/UI/Card";
 import Colors from "../../constants/Colors";
 
+const FORM_INPUT_UPDATE = "UPDATE";
+
+const formReducer = (state, action) => {
+  if (action.type === FORM_INPUT_UPDATE) {
+    const updatedValues = {
+      ...state.inputValues,
+      [action.input]: action.value
+    };
+    const updatedValidaties = {
+      ...state.inputValidities,
+      [action.input]: action.isValid
+    };
+    let updatedFormIsValid = true;
+    for (const key in updatedValidaties) {
+      updatedFormIsValid = updatedFormIsValid && updatedValidaties[key];
+    }
+    return {
+      formIsValid: updatedFormIsValid,
+      inputValues: updatedValues,
+      inputValidities: updatedValidaties
+    };
+  }
+  return state;
+};
+
 const AuthScreen = props => {
+  const [isSignup, setIsSignup] = useState(false);
+  const dispatch = useDispatch();
+
+  const authHandler = () => {
+    let action;
+    if (isSignup) {
+      action = AuthActions.signup(
+        formState.inputValues.email,
+        formState.inputValues.password
+      );
+    } else {
+      action = AuthActions.login(
+        formState.inputValues.email,
+        formState.inputValues.password
+      );
+    }
+    dispatch(action);
+  };
+
+  const [formState, dispatchFormState] = useReducer(formReducer, {
+    inputValues: {
+      email: "",
+      password: ""
+    },
+    inputValidities: {
+      email: false,
+      password: false
+    },
+    formIsValid: false
+  });
+
+  const inputChangeHandler = useCallback(
+    (inputIdentifier, inputValue, isValidity) => {
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        value: inputValue,
+        isValid: isValidity,
+        input: inputIdentifier
+      });
+    },
+    [dispatchFormState]
+  );
+
   return (
     <KeyboardAvoidingView
       behavior="padding"
@@ -32,9 +101,8 @@ const AuthScreen = props => {
               required
               email
               autoCapitalize="none"
-              errorMessage="Please enter a valid email address"
-              onInputChange={() => {}}
-              initialValue=""
+              errorText="Please enter a valid email address"
+              onInputChange={inputChangeHandler}
             />
             <Input
               id="password"
@@ -44,16 +112,26 @@ const AuthScreen = props => {
               required
               minLength={5}
               autoCapitalize="none"
-              errorMessage="Please enter a valid password"
-              onInputChange={() => {}}
+              errorText="Please enter a valid password"
+              onInputChange={inputChangeHandler}
               initialValue=""
             />
-            <View style={styles.buttonContainer}><Button title="Login" color={Colors.primary} onPress={() => {}} /></View>
-            <View style={styles.buttonContainer}><Button
-              title="Switch to Sign Up"
-              color={Colors.accent}
-              onPress={() => {}}
-            /></View>
+            <View style={styles.buttonContainer}>
+              <Button
+                title={isSignup ? "Sign up" : "Login"}
+                color={Colors.primary}
+                onPress={authHandler}
+              />
+            </View>
+            <View style={styles.buttonContainer}>
+              <Button
+                title={`Switch to ${isSignup ? "Login" : "Sign Up"}`}
+                color={Colors.accent}
+                onPress={() => {
+                  setIsSignup(prevState => !prevState);
+                }}
+              />
+            </View>
           </ScrollView>
         </Card>
       </LinearGradient>
@@ -81,7 +159,7 @@ const styles = StyleSheet.create({
     padding: 20
   },
   buttonContainer: {
-      marginTop: 10
+    marginTop: 10
   }
 });
 
