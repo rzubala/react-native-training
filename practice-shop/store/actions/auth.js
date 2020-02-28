@@ -3,10 +3,21 @@ import { AsyncStorage } from "react-native";
 export const SIGNUP = "SIGNUP";
 export const LOGIN = "LOGIN";
 export const AUTHENTICATE = "AUTHENTICATE";
+export const LOGOUT = "LOGOUT";
 
 export const authenticate = (userId, token) => {
   return { type: AUTHENTICATE, userId: userId, token: token };
 };
+
+export const logout = () => {
+  return { type: LOGOUT };
+};
+
+const setLogoutTimer = expirationTime => {
+  setTimeout(() => {
+    
+  }, expirationTime)
+}
 
 export const signup = (email, password) => {
   return async dispatch => {
@@ -36,7 +47,7 @@ export const signup = (email, password) => {
 
     const resData = await response.json();
     dispatch(authenticate(resData.localId, resData.idToken));
-    
+
     const expirationDate = new Date(
       new Date().getTime() + parseInt(resData.expiresIn) * 1000
     );
