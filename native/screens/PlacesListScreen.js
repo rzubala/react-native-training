@@ -21,7 +21,7 @@ const PlacesListScreen = props => {
               placeId: itemData.item.id
             });
           }}
-          image={null}
+          image={itemData.item.imageUri}
           title={itemData.item.title}
           address={null}
         />
