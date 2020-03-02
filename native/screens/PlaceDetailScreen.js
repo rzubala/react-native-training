@@ -9,6 +9,12 @@ const PlaceDetailScreen = props => {
     </View>)
 }
 
+PlaceDetailScreen.navigationOptions = navData => {
+    return {
+        headerTitle: navData.navigation.getParam('placeTitle')
+    }
+}
+
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
