@@ -13,7 +13,7 @@ import Colors from "../constants/Colors";
 
 const LocationPicker = props => {
   const [pickedLocation, setPickedLocation] = useState();
-  const [isFetching, setIsFetching] = useState();
+  const [isFetching, setIsFetching] = useState(false);
 
   const verifyPermissions = async () => {
     const result = await Permissions.askAsync(Permissions.LOCATION);
@@ -55,7 +55,7 @@ const LocationPicker = props => {
     <View style={styles.locationPicker}>
       <View style={styles.mapPreview}>
         {isFetching ? (
-          <ActivityIndicator size={large} color={Colors.primary} />
+          <ActivityIndicator size="large" color={Colors.primary} />
         ) : (
           <Text>No location chosen yet!</Text>
         )}
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   mapPreview: {
     marginBottom: 10,
     width: "100%",
-    height: "150",
+    height: 150,
     borderColor: "#ccc",
     borderWidth: 1,
     justifyContent: 'center',
