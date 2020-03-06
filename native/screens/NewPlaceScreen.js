@@ -13,11 +13,11 @@ import ImagePicker from "../components/ImageSelector";
 import * as placeActions from "../store/actions/places";
 import Colors from "../constants/Colors";
 
-import LocationPicker from '../components/LocationPicker'
+import LocationPicker from "../components/LocationPicker";
 
 const NewPlaceScreen = props => {
   const [titleValue, setTitleValue] = useState("");
-  const [image, setImage] = useState()
+  const [image, setImage] = useState();
 
   const dispatch = useDispatch();
 
@@ -31,8 +31,8 @@ const NewPlaceScreen = props => {
   };
 
   const imageTakenHandler = imagePath => {
-    setImage(imagePath)
-  }
+    setImage(imagePath);
+  };
 
   return (
     <ScrollView>
@@ -44,7 +44,7 @@ const NewPlaceScreen = props => {
           onChangeText={titleChangeHandler}
         />
         <ImagePicker onImageTaken={imageTakenHandler} />
-        <LocationPicker />
+        <LocationPicker navigation={props.navigation} />
         <Button
           title="Save Place"
           color={Colors.primary}
