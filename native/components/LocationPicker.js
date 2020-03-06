@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Button,
@@ -16,6 +16,14 @@ const LocationPicker = props => {
   const [pickedLocation, setPickedLocation] = useState();
   const [isFetching, setIsFetching] = useState(false);
 
+  const mapPickedLocation = props.navigation.getParam("pickedLocation");
+
+  useEffect(() => {
+    if (mapPickedLocation) {
+      setPickedLocation(mapPickedLocation)
+    }
+  }, [mapPickedLocation])
+
   const verifyPermissions = async () => {
     const result = await Permissions.askAsync(Permissions.LOCATION);
     if (result.status !== "granted") {
@@ -30,7 +38,7 @@ const LocationPicker = props => {
   };
 
   const pickOnMapHandler = () => {
-    props.navigation.navigate('Map')
+    props.navigation.navigate("Map");
   };
 
   const getLocationHandler = async () => {
@@ -58,7 +66,11 @@ const LocationPicker = props => {
 
   return (
     <View style={styles.locationPicker}>
-      <MapPreview style={styles.mapPreview} location={pickedLocation} onPress={pickOnMapHandler} >
+      <MapPreview
+        style={styles.mapPreview}
+        location={pickedLocation}
+        onPress={pickOnMapHandler}
+      >
         {isFetching ? (
           <ActivityIndicator size="large" color={Colors.primary} />
         ) : (
