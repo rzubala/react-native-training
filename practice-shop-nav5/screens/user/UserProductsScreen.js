@@ -21,11 +21,8 @@ const UserProductsScreen = props => {
   const dispatch = useDispatch();
 
   const editProductHandler = id => {
-    props.navigation.navigate({
-      routeName: "EditProduct",
-      params: {
-        productId: id
-      }
+    props.navigation.navigate("EditProduct", {
+      productId: id
     });
   };
 
@@ -103,7 +100,7 @@ export const screenOptions = navigationData => {
           title="Add"
           iconName={Platform.OS === "android" ? "md-create" : "ios-create"}
           onPress={() => {
-            navigationData.navigation.navigate({ routeName: "EditProduct" });
+            navigationData.navigation.navigate("EditProduct");
           }}
         />
       </HeaderButtons>
