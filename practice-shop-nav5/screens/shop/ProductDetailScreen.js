@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     }
 })
 
-ProductDetailScreen.navigationOptions = navData => {
+export const screenOptions = navData => {
     return {
         headerTitle: navData.navigation.getParam('productTitle')
     }

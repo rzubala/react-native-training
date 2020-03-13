@@ -93,11 +93,8 @@ const styles = StyleSheet.create({
     }
 })
 
-CartScreen.navigationOptions = navData => {
-    return {
-        headerTitle: 'Your cart'
-    }
+export const screenOptions = {
+    headerTitle: 'Your cart'
 }
-
 
 export default CartScreen

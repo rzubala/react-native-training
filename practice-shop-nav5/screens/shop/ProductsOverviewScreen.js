@@ -38,9 +38,9 @@ const ProductsOverviewScreen = props => {
     }, [dispatch, loadProducts])
 
     useEffect(() => {
-        const willFocusSub = props.navigation.addListener('willFocus', loadProducts)
+        const unsubscribe = props.navigation.addListener('focus', loadProducts)
         return () => {
-            willFocusSub.remove()
+            unsubscribe()
         }
     }, [loadProducts])
 
@@ -95,10 +95,10 @@ const styles = StyleSheet.create({
     }
 })
 
-ProductsOverviewScreen.navigationOptions = navigationData => {
+export const screenOptions = navigationData => {
     return {
         headerTitle: 'All products',
-        headerRight: () => (
+        headerRight: (props) => (
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
                 <Item title='Cart' iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'} onPress={() => {
                     navigationData.navigation.navigate({
@@ -107,7 +107,7 @@ ProductsOverviewScreen.navigationOptions = navigationData => {
                 }} />
             </HeaderButtons>
         ),
-        headerLeft: () => (
+        headerLeft: (props) => (
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
                 <Item title='Menu' iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'} onPress={() => {
                     navigationData.navigation.toggleDrawer()
